@@ -10,9 +10,12 @@
 - add a fourier transform and some visualization for analysis
 
 - get better performance to stop clicking:
-    - idea: when an waveform is used at a given frequency, precompute the waveform into an array
-      for the current sample rate and then just memcpy it multiple times
-    - alternatively if known ahead of time, we can build a cache of waveform sample arrays for all normal piano notes
+    - separate key handling into a second thread and have the audio thread read from
+      a data structure of currently active CacheReaders
+      - data structure can just be a type with an array of cache readers and a size
+      - to make it thread-safe both the audio thread and the input thread CAS the pointer to the structure before reading/updating
+
+- after improving input performance, add keyboard mode
 
 
 - add key lookup table to map [0-87] -> note

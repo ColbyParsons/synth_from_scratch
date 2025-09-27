@@ -1,0 +1,23 @@
+- add duty cycle to wave generation and modularize it to work on any wave
+- same thing with reversing the wave form
+- try making random wave forms with various parameters
+    - try brownian noise (self similar)
+    - try different distributions of noise
+    - try holding same rand val for a few cycles
+
+- get a table of piano notes and add support for playing via the keyboard
+
+- add a fourier transform and some visualization for analysis
+
+- get better performance to stop clicking:
+    - idea: when an waveform is used at a given frequency, precompute the waveform into an array
+      for the current sample rate and then just memcpy it multiple times
+    - alternatively if known ahead of time, we can build a cache of waveform sample arrays for all normal piano notes
+
+
+- add key lookup table to map [0-87] -> note
+
+
+Reference:
+https://croakingkero.com/tutorials/sound_winmm/
+

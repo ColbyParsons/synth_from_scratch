@@ -10,8 +10,11 @@
 #include <iostream>
 
 #include "constants.h"
+#include "input.h"
 #include "logging.h"
+#include "pianokeys.h"
 #include "wavecache.h"
+#include "window.h"
 
 using std::cout;
 using std::endl;
@@ -33,7 +36,7 @@ unsigned long currSample = 0;
 
 float frequency = 261.6256;
 
-size_t currKey = 40; // Middle C
+size_t currKey = MIDDLE_C; // Middle C
 
 void incrementCurrSample() {
 	currSample++;
@@ -132,6 +135,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	((void)hPrevInstance);
 	((void)lpCmdLine);
 	((void)nShowCmd);
+
+	WindowMgr windowMgr;
 
 	initDebug();
 	updateCacheReaders();

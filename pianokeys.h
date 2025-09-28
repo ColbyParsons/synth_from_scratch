@@ -4,6 +4,8 @@
 
 const size_t NUM_KEYS = 88;
 
+const size_t MIDDLE_C = 39;
+
 const float pianoKeyFreqs[ NUM_KEYS ] = {
     27.50000,
     29.13524,

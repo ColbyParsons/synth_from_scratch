@@ -72,29 +72,41 @@ float getTriangleSample( float wavePos ) {
 // TODO: separate key handling into a second thread and have the audio thread read from
 // a data structure of currently active cache readers
 
+float currRandSample;
+float lastSampledPos = -1;
+float getRandSample( float wavePos, float updateRate ) {
+	// If we last sampled more than updateFreq ago, or we've started a new wave, get a new rand sample
+	if ( lastSampledPos < wavePos - updateRate ) {
+		currRandSample = ( rand() / (float) RAND_MAX ) * 2 - 1;
+	}
+
+	DEBUG_LOG( currRandSample );
+
+	lastSampledPos = wavePos;
+	// return currRandSample;
+	return ( rand() / (float) RAND_MAX ) * 2 - 1;
+}
+
+float getRandSample( float wavePos ) {
+	return getRandSample( wavePos, 0.1 );
+}
+
+WaveCache sinCache( getSinSample );
 WaveCache triCache( getTriangleSample );
+WaveCache squareCache( getSquareSample );
+WaveCache sawCache( getSawtoothSample );
+WaveCache randCache( getRandSample );
+
+WaveCache * currCache = &triCache;
 
 CacheReader cacheReaders[3];
 
 void updateCacheReaders() {
-	cacheReaders[0].update( triCache, currKey );
-	// cacheReaders[1].update( triCache, currKey + 4 );
-	// cacheReaders[2].update( triCache, currKey + 7 );
+	cacheReaders[0].update( *currCache, currKey );
+	// cacheReaders[1].update( *currCache, currKey + 4 );
+	// cacheReaders[2].update( *currCache, currKey + 7 );
 }
 
-float currRandSample;
-float lastSampledPos = -1;
-float getRandSample( float baseFreq, float updateFreq, size_t sample ) {
-	const float wavePos = getWavePosForFreq( baseFreq, sample );
-	// If we last sampled more than updateFreq ago, or we've started a new wave, get a new rand sample
-	if ( lastSampledPos < wavePos - updateFreq / (float)SAMPLE_RATE ||
-		 lastSampledPos > wavePos ) {
-		currRandSample = ( rand() / (float) RAND_MAX ) * 2 - 1;
-	}
-
-	lastSampledPos = wavePos;
-	return currRandSample;
-}
 
 // Collection point to swap between underlying samples
 int16_t getSample() {
@@ -166,7 +178,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	bool quit = false;
 	while( !quit ) {
 		char c = _getche();
+		cout << (int)c << endl;
 		switch(c) {
+			case 9: { // tab key
+				if ( currCache == &sinCache ) {
+					currCache = &triCache;
+				} else if ( currCache == &triCache ) {
+					currCache = &squareCache;
+				} else if ( currCache == &squareCache ) {
+					currCache = &sawCache;
+				} else if ( currCache == &sawCache ) {
+					currCache = &randCache;
+				} else if ( currCache == &randCache ) {
+					currCache = &sinCache;
+				}
+				updateCacheReaders();
+			} break;
 			case 'p': {
 				if ( currKey != 87 ) {
 					currKey++;
@@ -253,7 +280,6 @@ void CALLBACK WaveOutProc(HWAVEOUT wave_out_handle, UINT message, DWORD_PTR inst
 			cout << "WOM_OPEN" << endl;
 			break;
 		case WOM_DONE:{
-			DEBUG_LOG( "CALLED" )
 			// cout << "WOM_DONE" << endl;
 			for(size_t i = 0; i < CHUNK_SIZE; ++i) {
 				chunks[currChunk][i] = getSample();

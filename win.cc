@@ -97,7 +97,7 @@ WaveCache squareCache( getSquareSample );
 WaveCache sawCache( getSawtoothSample );
 WaveCache randCache( getRandSample );
 
-WaveCache * currCache = &triCache;
+WaveCache * currCache = &sinCache;
 
 CacheReader cacheReaders[3];
 
@@ -178,7 +178,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	bool quit = false;
 	while( !quit ) {
 		char c = _getche();
-		cout << (int)c << endl;
+		// cout << (int)c << endl;
 		switch(c) {
 			case 9: { // tab key
 				if ( currCache == &sinCache ) {

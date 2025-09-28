@@ -16,6 +16,7 @@
       - to make it thread-safe both the audio thread and the input thread CAS the pointer to the structure before reading/updating
 
 - after improving input performance, add keyboard mode
+    - keyboard mode will need keypress handlers instead of just reading characters
 
 
 - add key lookup table to map [0-87] -> note

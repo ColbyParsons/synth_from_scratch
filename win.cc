@@ -78,8 +78,8 @@ CacheReader cacheReaders[3];
 
 void updateCacheReaders() {
 	cacheReaders[0].update( triCache, currKey );
-	cacheReaders[1].update( triCache, currKey + 4 );
-	cacheReaders[2].update( triCache, currKey + 7 );
+	// cacheReaders[1].update( triCache, currKey + 4 );
+	// cacheReaders[2].update( triCache, currKey + 7 );
 }
 
 float currRandSample;
@@ -98,16 +98,22 @@ float getRandSample( float baseFreq, float updateFreq, size_t sample ) {
 
 // Collection point to swap between underlying samples
 int16_t getSample() {
-	float sum = 0;
-	for ( size_t i = 0; i < 3; i++ ) {
-		sum += cacheReaders[i].readNext();
-	}
-	sum /= 3;
+	// float sum = 0;
+	// for ( size_t i = 0; i < 3; i++ ) {
+	// 	sum += cacheReaders[i].readNext();
+	// }
+	// sum /= 3;
 
-	return sum * DEFAULT_AMPLITUDE;
+	// return sum * DEFAULT_AMPLITUDE;
+	return cacheReaders[0].readNext() * DEFAULT_AMPLITUDE;
 }
 
 void CALLBACK WaveOutProc(HWAVEOUT, UINT, DWORD_PTR, DWORD_PTR, DWORD_PTR);
+
+void setKey( size_t key ) {
+	currKey = key;
+	updateCacheReaders();
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
 	((void)hInstance);
@@ -172,6 +178,57 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					currKey--;
 					updateCacheReaders();
 				}
+			} break;
+			case 'a': {
+				setKey( 36 );
+			} break;
+			case 'z': {
+				setKey( 37 );
+			} break;
+			case 's': {
+				setKey( 38 );
+			} break;
+			case 'x': {
+				setKey( 39 );
+			} break;
+			case 'c': {
+				setKey( 40 );
+			} break;
+			case 'f': {
+				setKey( 41 );
+			} break;
+			case 'v': {
+				setKey( 42 );
+			} break;
+			case 'g': {
+				setKey( 43 );
+			} break;
+			case 'b': {
+				setKey( 44 );
+			} break;
+			case 'n': {
+				setKey( 45 );
+			} break;
+			case 'j': {
+				setKey( 46 );
+			} break;
+			case 'm': {
+				setKey( 47 );
+			} break;
+			case 'k': {
+				setKey( 48 );
+			} break;
+			case ',': {
+				setKey( 49 );
+			} break;
+			case 'l': {
+				setKey( 50 );
+			} break;
+			case '.': {
+				setKey( 51 );
+			} break;
+			case '/': {
+				setKey( 52 );
 			} break;
 			case 27: { // escape
 				quit = true;
